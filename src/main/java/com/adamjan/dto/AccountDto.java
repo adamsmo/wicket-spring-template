@@ -1,13 +1,6 @@
-package com.adamjan.pages;
+package com.adamjan.dto;
 
-import com.adamjan.business.AccountBusiness;
-import com.adamjan.dto.AccountDto;
-import com.gs.collections.api.block.procedure.Procedure;
-import com.gs.collections.impl.list.mutable.FastList;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import com.adamjan.common.Account;
 
 /**
  * The MIT License
@@ -32,23 +25,28 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class MainPage extends WebPage {
+public class AccountDto implements Account {
 
-    @SpringBean
-    private AccountBusiness accountBusiness;
+    private int id;
+    private String name;
 
-    public MainPage() {
-        add(new Label("msg", "Hello"));
-        final RepeatingView view = new RepeatingView("repeater");
+    @Override
+    public int getId() {
+        return id;
+    }
 
-        FastList<AccountDto> dtos = FastList.newList(accountBusiness.getAllAccounts());
-        dtos.forEach(new Procedure<AccountDto>() {
-            @Override
-            public void value(AccountDto dto) {
-                view.add(new Label(view.newChildId(), dto.getName()));
-            }
-        });
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
 
-        add(view);
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 }

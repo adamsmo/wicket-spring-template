@@ -1,13 +1,9 @@
-package com.adamjan.pages;
+package com.adamjan.business;
 
-import com.adamjan.business.AccountBusiness;
-import com.adamjan.dto.AccountDto;
-import com.gs.collections.api.block.procedure.Procedure;
-import com.gs.collections.impl.list.mutable.FastList;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.stereotype.Component;
 
 /**
  * The MIT License
@@ -32,23 +28,12 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class MainPage extends WebPage {
+@Component
+public class AbstractBusiness {
+    @Autowired
+    private LocalSessionFactoryBean localSessionFactoryBean;
 
-    @SpringBean
-    private AccountBusiness accountBusiness;
-
-    public MainPage() {
-        add(new Label("msg", "Hello"));
-        final RepeatingView view = new RepeatingView("repeater");
-
-        FastList<AccountDto> dtos = FastList.newList(accountBusiness.getAllAccounts());
-        dtos.forEach(new Procedure<AccountDto>() {
-            @Override
-            public void value(AccountDto dto) {
-                view.add(new Label(view.newChildId(), dto.getName()));
-            }
-        });
-
-        add(view);
+    protected Session getSession() {
+        return localSessionFactoryBean.getObject().getCurrentSession();
     }
 }

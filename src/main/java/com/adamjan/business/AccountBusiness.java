@@ -1,13 +1,19 @@
-package com.adamjan.pages;
+package com.adamjan.business;
 
-import com.adamjan.business.AccountBusiness;
 import com.adamjan.dto.AccountDto;
-import com.gs.collections.api.block.procedure.Procedure;
+import com.adamjan.model.AccountModel;
+import com.gs.collections.api.block.function.Function;
 import com.gs.collections.impl.list.mutable.FastList;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RepeatingView;
-import org.apache.wicket.spring.injection.annot.SpringBean;
+import org.dozer.Mapper;
+import org.hibernate.Criteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * The MIT License
@@ -32,23 +38,26 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class MainPage extends WebPage {
+@Component
+@Transactional(isolation = Isolation.SERIALIZABLE)
+public class AccountBusiness extends AbstractBusiness {
 
-    @SpringBean
-    private AccountBusiness accountBusiness;
+    @Autowired
+    private Mapper mapper;
 
-    public MainPage() {
-        add(new Label("msg", "Hello"));
-        final RepeatingView view = new RepeatingView("repeater");
+    public List<AccountDto> getAllAccounts() {
+        Criteria criteria = getSession().createCriteria(AccountModel.class);
+        FastList<AccountModel> list = FastList.<AccountModel>newList(criteria.list());
 
-        FastList<AccountDto> dtos = FastList.newList(accountBusiness.getAllAccounts());
-        dtos.forEach(new Procedure<AccountDto>() {
+        Function<AccountModel, AccountDto> function = new Function<AccountModel, AccountDto>() {
+
             @Override
-            public void value(AccountDto dto) {
-                view.add(new Label(view.newChildId(), dto.getName()));
+            public AccountDto valueOf(AccountModel object) {
+                return mapper.map(object, AccountDto.class);
             }
-        });
+        };
 
-        add(view);
+        Collection<AccountDto> collection = list.collect(function);
+        return new ArrayList<>(collection);
     }
 }
