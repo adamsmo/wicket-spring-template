@@ -1,6 +1,6 @@
 package com.adamjan.pages;
 
-import com.adamjan.AuthorizedSession;
+import org.apache.wicket.markup.html.WebPage;
 
 /**
  * The MIT License
@@ -25,9 +25,5 @@ import com.adamjan.AuthorizedSession;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class LoginPage extends TemplatePage {
-    public LoginPage(){
-        //Logic for collecting user data;
-        ((AuthorizedSession)getSession()).authenticate("username", "password");
-    }
+public class TemplatePage extends WebPage {
 }

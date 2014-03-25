@@ -40,6 +40,9 @@ public class AccountModel implements Account {
     @Column(name = "user_name", length = 100, nullable = false)
     private String name;
 
+    @Column(name = "password", length = 100, nullable = false)
+    private String password;
+
     public int getId() {
         return id;
     }
@@ -54,6 +57,14 @@ public class AccountModel implements Account {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

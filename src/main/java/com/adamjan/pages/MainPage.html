@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns:wicket="http://wicket.apache.org" xmlns="http://www.w3.org/1999/xhtml">
 <body>
-<div wicket:id="msg"></div>
-<ul>
-    <li wicket:id="repeater"></li>
-</ul>
+<wicket:extend>
+    <div wicket:id="msg"></div>
+
+    <div>
+        <form wicket:id="form">
+            <div>account name</div>
+            <input wicket:id="acc_name" type="text">
+            <button type="submit">add</button>
+        </form>
+    </div>
+    <ul wicket:id="repeater">
+        <li wicket:id="label"></li>
+    </ul>
+</wicket:extend>
 </body>
 </html>

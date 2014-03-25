@@ -6,6 +6,7 @@ import com.gs.collections.api.block.function.Function;
 import com.gs.collections.impl.list.mutable.FastList;
 import org.dozer.Mapper;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
@@ -59,5 +60,15 @@ public class AccountBusiness extends AbstractBusiness {
 
         Collection<AccountDto> collection = list.collect(function);
         return new ArrayList<>(collection);
+    }
+
+    public void addAccount(String accName) {
+        Criteria criteria = getSession().createCriteria(AccountModel.class);
+        Integer maxId = (Integer) criteria.setProjection(Projections.max("id")).uniqueResult();
+
+        AccountModel a = new AccountModel();
+        a.setId(maxId + 1);
+        a.setName(accName);
+        getSession().saveOrUpdate(a);
     }
 }

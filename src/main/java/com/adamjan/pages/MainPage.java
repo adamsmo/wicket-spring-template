@@ -2,12 +2,16 @@ package com.adamjan.pages;
 
 import com.adamjan.business.AccountBusiness;
 import com.adamjan.dto.AccountDto;
-import com.gs.collections.api.block.procedure.Procedure;
-import com.gs.collections.impl.list.mutable.FastList;
-import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.repeater.RepeatingView;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
+
+import java.util.List;
 
 /**
  * The MIT License
@@ -32,23 +36,57 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class MainPage extends WebPage {
+public class MainPage extends TemplatePage {
 
+    private String accName;
     @SpringBean
     private AccountBusiness accountBusiness;
 
     public MainPage() {
         add(new Label("msg", "Hello"));
-        final RepeatingView view = new RepeatingView("repeater");
 
-        FastList<AccountDto> dtos = FastList.newList(accountBusiness.getAllAccounts());
-        dtos.forEach(new Procedure<AccountDto>() {
+        LoadableDetachableModel<List<AccountDto>> model = new LoadableDetachableModel<List<AccountDto>>() {
             @Override
-            public void value(AccountDto dto) {
-                view.add(new Label(view.newChildId(), dto.getName()));
+            protected List<AccountDto> load() {
+                return accountBusiness.getAllAccounts();
             }
-        });
+        };
 
-        add(view);
+        ListView listView = new ListView<AccountDto>("repeater", model) {
+            @Override
+            protected void populateItem(ListItem item) {
+                AccountDto dto = getModelObject().get(item.getIndex());
+                item.add(new Label("label", dto.getName()));
+            }
+        };
+        add(listView);
+
+        Form form = new Form<String>("form") {
+            @Override
+            protected void onSubmit() {
+                accountBusiness.addAccount(accName);
+                accName = null;
+            }
+        };
+
+        add(form);
+
+        form.add(new TextField<>("acc_name", new PropertyModel<>(this, "accName")));
+    }
+
+    public String getAccName() {
+        return accName;
+    }
+
+    public void setAccName(String accName) {
+        this.accName = accName;
+    }
+
+    public AccountBusiness getAccountBusiness() {
+        return accountBusiness;
+    }
+
+    public void setAccountBusiness(AccountBusiness accountBusiness) {
+        this.accountBusiness = accountBusiness;
     }
 }
