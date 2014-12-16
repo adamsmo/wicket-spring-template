@@ -50,7 +50,6 @@ public class RootApplication extends AuthenticatedWebApplication {
         new AnnotatedMountScanner().scanPackage("com.adamjan").mount(this);
 
         setRootRequestMapper(new CryptoMapper(getRootRequestMapper(), this));
-
         getSecuritySettings().setAuthorizationStrategy(new AnnotationsRoleAuthorizationStrategy(this));
 
         //mount login page at /login

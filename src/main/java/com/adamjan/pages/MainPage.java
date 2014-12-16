@@ -72,6 +72,8 @@ public class MainPage extends TemplatePage {
         add(form);
 
         form.add(new TextField<>("acc_name", new PropertyModel<>(this, "accName")));
+
+        add(new Box2dPanel("box2d"));
     }
 
     public String getAccName() {
