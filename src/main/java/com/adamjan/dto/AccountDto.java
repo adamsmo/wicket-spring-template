@@ -1,7 +1,5 @@
 package com.adamjan.dto;
 
-import com.adamjan.common.Account;
-
 /**
  * The MIT License
  * <p/>
@@ -25,27 +23,20 @@ import com.adamjan.common.Account;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-public class AccountDto implements Account {
+public class AccountDto {
 
     private int id;
     private String name;
 
-    @Override
     public int getId() {
         return id;
     }
-
-    @Override
     public void setId(int id) {
         this.id = id;
     }
-
-    @Override
     public String getName() {
         return name;
     }
-
-    @Override
     public void setName(String name) {
         this.name = name;
     }

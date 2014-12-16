@@ -1,8 +1,6 @@
 package com.adamjan;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.dozer.DozerBeanMapper;
-import org.dozer.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,7 +76,7 @@ public class HibernateConfiguration {
         dataSource.setMaxStatements(70);
         dataSource.setMaxIdleTime(100);
         dataSource.setMaxStatementsPerConnection(20);
-        dataSource.setPreferredTestQuery("select 1");
+        dataSource.setPreferredTestQuery("values 1");
         dataSource.setTestConnectionOnCheckin(true);
         dataSource.setIdleConnectionTestPeriod(60);
         dataSource.setAcquireIncrement(1);
@@ -99,12 +97,7 @@ public class HibernateConfiguration {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    @Bean
-    public Mapper mapper() {
-        return new DozerBeanMapper();
-    }
-
-    Properties hibernateProperties() {
+    private Properties hibernateProperties() {
         return new Properties() {
             {
                 setProperty("hibernate.dialect", hibernateDialect);

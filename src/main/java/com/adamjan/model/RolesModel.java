@@ -29,13 +29,14 @@ import javax.persistence.Table;
  * THE SOFTWARE.
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "ROLES")
 public class RolesModel {
 
     @Id
+    @Column(name="ID")
     private int id;
 
-    @Column(name = "role_name", length = 30, nullable = false)
+    @Column(name = "ROLE_NAME", length = 30, nullable = false)
     private String name;
 
     public int getId() {

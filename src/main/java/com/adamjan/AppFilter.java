@@ -31,7 +31,7 @@ import javax.servlet.annotation.WebInitParam;
 
 @WebFilter(value = "/*", initParams = {
         @WebInitParam(name = "applicationFactoryClassName", value = "org.apache.wicket.spring.SpringWebApplicationFactory"),
-        @WebInitParam(name = "wicket.configuration", value = "deployment")
+        @WebInitParam(name = "wicket.configuration", value = "development")
 })
 public class AppFilter extends WicketFilter3 {
 }

@@ -2,18 +2,13 @@ package com.adamjan.business;
 
 import com.adamjan.dto.AccountDto;
 import com.adamjan.model.AccountModel;
+import com.adamjan.model.QAccountModel;
 import com.gs.collections.api.block.function.Function;
 import com.gs.collections.impl.list.mutable.FastList;
-import org.dozer.Mapper;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Projections;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,32 +38,35 @@ import java.util.List;
 @Transactional(isolation = Isolation.SERIALIZABLE)
 public class AccountBusiness extends AbstractBusiness {
 
-    @Autowired
-    private Mapper mapper;
-
     public List<AccountDto> getAllAccounts() {
-        Criteria criteria = getSession().createCriteria(AccountModel.class);
-        FastList<AccountModel> list = FastList.<AccountModel>newList(criteria.list());
+        List<AccountModel> list = getHibernateQuery()
+                .from(QAccountModel.accountModel)
+                .list(QAccountModel.accountModel);
 
-        Function<AccountModel, AccountDto> function = new Function<AccountModel, AccountDto>() {
-
+        return FastList.newList(list).collect(new Function<AccountModel, AccountDto>() {
             @Override
             public AccountDto valueOf(AccountModel object) {
-                return mapper.map(object, AccountDto.class);
+                AccountDto dto = new AccountDto();
+                dto.setId(object.getId());
+                dto.setName(object.getName());
+                return dto;
             }
-        };
-
-        Collection<AccountDto> collection = list.collect(function);
-        return new ArrayList<>(collection);
+        });
     }
 
     public void addAccount(String accName) {
-        Criteria criteria = getSession().createCriteria(AccountModel.class);
-        Integer maxId = (Integer) criteria.setProjection(Projections.max("id")).uniqueResult();
+        Integer gratestId = getHibernateQuery()
+                .from(QAccountModel.accountModel)
+                .orderBy(QAccountModel.accountModel.id.desc())
+                .limit(1)
+                .uniqueResult(QAccountModel.accountModel.id);
 
-        AccountModel a = new AccountModel();
-        a.setId(maxId + 1);
-        a.setName(accName);
-        getSession().saveOrUpdate(a);
+        if (gratestId == null) {
+            gratestId = 0;
+        }
+
+        AccountModel newModel = new AccountModel();
+        newModel.setId(gratestId + 1);
+        newModel.setName(accName);
     }
 }

@@ -1,5 +1,6 @@
 package com.adamjan.business;
 
+import com.mysema.query.jpa.hibernate.HibernateQuery;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
@@ -33,7 +34,7 @@ public class AbstractBusiness {
     @Autowired
     private LocalSessionFactoryBean localSessionFactoryBean;
 
-    protected Session getSession() {
-        return localSessionFactoryBean.getObject().getCurrentSession();
+    protected HibernateQuery getHibernateQuery(){
+        return new HibernateQuery(localSessionFactoryBean.getObject().getCurrentSession());
     }
 }

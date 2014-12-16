@@ -1,7 +1,5 @@
 package com.adamjan.model;
 
-import com.adamjan.common.Account;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -31,16 +29,17 @@ import javax.persistence.Table;
  * THE SOFTWARE.
  */
 @Entity
-@Table(name = "account")
-public class AccountModel implements Account {
+@Table(name = "ACCOUNT")
+public class AccountModel {
 
     @Id
+    @Column(name="ID")
     private int id;
 
-    @Column(name = "user_name", length = 100, nullable = false)
+    @Column(name = "USER_NAME", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "password", length = 100, nullable = false)
+    @Column(name = "PASSWORD", length = 100, nullable = false)
     private String password;
 
     public int getId() {
